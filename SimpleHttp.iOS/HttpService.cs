@@ -14,6 +14,15 @@ namespace SimpleHttp.iOS
 {
 	public sealed class HttpService : IHttpService
 	{
+		#region public static method
+
+		public static void Init()
+		{
+			IoCService.RegisterModule(new AutofacModule());
+		}
+
+		#endregion
+
 		#region public constructors
 
 		public HttpService()

@@ -5,8 +5,9 @@ namespace SimpleHttp.Droid
 {
 	public sealed class HttpService : IHttpService
 	{
-		public HttpService()
+		public static void Init()
 		{
+			IoCService.RegisterModule(new AutofacModule());
 		}
 
 		public async Task<ResponseMessage> GetResponse(RequestData requestData)
