@@ -18,7 +18,7 @@ namespace SimpleHttp
 				Tag = tag,
 				Url = url,
 				Type = RequestData.RequestType.Post,
-				Timeout = Timeout 
+				Timeout = Timeout <= new TimeSpan(0, 0, 0) ? _defaultTimeout : Timeout
 			};
 
 			using (var scope = IoCService.Container.BeginLifetimeScope())
@@ -35,7 +35,7 @@ namespace SimpleHttp
 				Tag = tag,
 				Url = url,
 				Type = RequestData.RequestType.Get,
-				Timeout = Timeout
+				Timeout = Timeout <= new TimeSpan(0, 0, 0) ? _defaultTimeout : Timeout
 			};
 
 			using (var scope = IoCService.Container.BeginLifetimeScope())
@@ -43,6 +43,8 @@ namespace SimpleHttp
 				return await scope.Resolve<IHttpService>().GetResponse(requestData);
 			}
 		}
+
+		private readonly TimeSpan _defaultTimeout = new TimeSpan(0, 10, 0);
 	}
 }
 
