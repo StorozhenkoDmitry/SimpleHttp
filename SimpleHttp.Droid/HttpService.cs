@@ -12,7 +12,15 @@ namespace SimpleHttp.Droid
 
 		public async Task<ResponseMessage> GetResponse(RequestData requestData)
 		{
-			FormUrlEncodedContent body = new FormUrlEncodedContent(requestData.Body);
+			if (requestData == null)
+			{
+				return new ResponseMessage("Request data is null.", requestData);
+			}
+
+			if ((requestData.Body == null || requestData.Body.Count == 0) && requestData.Type == RequestData.RequestType.Post)
+			{
+				return new ResponseMessage("Request body is empty. Set body or use GetAsync for this request.", requestData);
+			}
 
 			var client = new HttpClient
 			{
@@ -20,8 +28,8 @@ namespace SimpleHttp.Droid
 			};
 
 			HttpResponseMessage response = requestData.Type == RequestData.RequestType.Get 
-					? await client.GetAsync(requestData.Url) 
-					: await client.PostAsync(requestData.Url, body);			
+				? await client.GetAsync(requestData.Url) 
+				: await client.PostAsync(requestData.Url, new FormUrlEncodedContent(requestData.Body));			
 
 			ResponseMessage message;
 

@@ -23,6 +23,16 @@ namespace SimpleHttp.iOS
 			}
 		}
 
+		public override void DidFinishEventsForBackgroundSession(NSUrlSession session)
+		{			
+			if (HttpService.BackgroundSessionCompletionHandler != null)
+			{
+				Action handler = HttpService.BackgroundSessionCompletionHandler;
+				HttpService.BackgroundSessionCompletionHandler = null;
+				handler.Invoke();
+			}
+		}
+
 		private void OnDownloadCompleted(string location, string taskDescription, string errorDescription = null)
 		{
 			if (DownloadCompleted != null)

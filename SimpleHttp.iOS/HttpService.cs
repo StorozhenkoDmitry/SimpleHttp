@@ -14,6 +14,12 @@ namespace SimpleHttp.iOS
 {
 	public sealed class HttpService : IHttpService
 	{
+		#region public static properties
+
+		public static Action BackgroundSessionCompletionHandler { get; set; }
+
+		#endregion
+
 		#region public static method
 
 		public static void Init()
@@ -40,6 +46,16 @@ namespace SimpleHttp.iOS
 
 		public async Task<ResponseMessage> GetResponse(RequestData requestData)
 		{
+			if (requestData == null)
+			{
+				return new ResponseMessage("Request data is null.", requestData);
+			}
+
+			if ((requestData.Body == null || requestData.Body.Count == 0) && requestData.Type == RequestData.RequestType.Post)
+			{
+				return new ResponseMessage("Request body is empty. Set body or use GetAsync for this request.", requestData);
+			}
+
 			EventHandler<DownloadEventArgs> downloadedAction = (sender, e) => {
 
 				if (e.TaskGuid.Equals(Guid.Empty))
